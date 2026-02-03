@@ -1,0 +1,937 @@
+{
+  "base_url": "https://epwrfits.in",
+  "pages": {
+    "index": {
+      "url": "https://epwrfits.in/index.aspx",
+      "title": "EPWRF India Time Series – Home Page",
+      "description": "Homepage with 44 modules"
+    },
+    "types_of_asi": {
+      "url": "https://epwrfits.in/TypesOfASIStateWise.aspx",
+      "title": "EPWRF India Time Series - Annual Survey of Industries",
+      "description": "Select ASI data type",
+      "radio_options": [
+        {
+          "id": "rad_grid_1",
+          "text": "\t | All India | \t | 1 | \t | ASI Major Classification"
+        },
+        {
+          "id": "rad_grid_2",
+          "text": "\t | All India | \t | 2 | \t | ASI 2- Digit Industry Group |     EPWRF's Concordance Series"
+        },
+        {
+          "id": "rad_grid_3",
+          "text": "\t | All India | \t | 3 | \t | ASI 3- Digit Industry Group |     EPWRF's Concordance Series"
+        },
+        {
+          "id": "rad_grid_4",
+          "text": "\t | All India | \t | 4 | \t | ASI 4- Digit Industry Group"
+        },
+        {
+          "id": "rad_grid_5",
+          "text": "\t | All India | \t | 5 | \t | Major Industry Group and Rural-Urban Breakup (2/3-Digit)"
+        },
+        {
+          "id": "rad_grid_10",
+          "text": "\t | All India | \t | 10 | \t | ASI Employment Characteristics"
+        },
+        {
+          "id": "rad_grid_6",
+          "text": "\t | States | \t | 6 | \t | Major Classification of Factories by States"
+        },
+        {
+          "id": "rad_grid_7",
+          "text": "\t | States | \t | 7 | \t | Major Industry Group for States (2-Digit) |     EPWRF's Concordance Series for States (2-Digit)"
+        },
+        {
+          "id": "rad_grid_8",
+          "text": "\t | States | \t | 8 | \t | Major Industry Group for States (3-Digit) |     EPWRF's Concordance Series for States (3-Digit)"
+        },
+        {
+          "id": "rad_grid_9",
+          "text": "\t | States | \t | 9 | \t | Major Industry Group & Rural-Urban Breakup for States(3-Digit)"
+        },
+        {
+          "id": "rad_grid_11",
+          "text": "\t | States | \t | 11 | \t | ASI State-wise Employment Characteristics"
+        }
+      ],
+      "proceed_button": {
+        "id": "ctl00_ContentPlaceHolder1_btnsubmit",
+        "value": "Submit >>"
+      }
+    },
+    "filter_page": {
+      "url": "https://epwrfits.in/ASITreeview_TwoDigitIndustry_State.aspx",
+      "title": "EPWRF India Time Series - ASI 2-Digit Industry Groups"
+    },
+    "display_page": {
+      "url": "https://epwrfits.in/ASI_TwoDigitDisplayData_Statewise.aspx",
+      "title": "EPWRF India Time Series - Data Display",
+      "buttons": {
+        "excel_export": {
+          "id": "ctl00_ContentPlaceHolder1_ibtnexcel",
+          "type": "image",
+          "class": "btn_report_export_excel"
+        },
+        "chart": {
+          "id": "ctl00_ContentPlaceHolder1_ibtnchart",
+          "type": "image",
+          "class": "btn_report_chart"
+        },
+        "print": {
+          "id": "ctl00_ContentPlaceHolder1_ibnprint",
+          "type": "image",
+          "class": "btn_report_export_print"
+        },
+        "back": {
+          "id": "Button2",
+          "type": "button",
+          "onclick": "backbuttonClick()"
+        }
+      }
+    }
+  },
+  "navigation_flow": [
+    {
+      "step": 1,
+      "page": "index.aspx",
+      "description": "Homepage",
+      "action": "Click 'Annual Survey of Industries' link",
+      "selector": "//a[contains(@href, 'TypesOfASIStateWise')]"
+    },
+    {
+      "step": 2,
+      "page": "TypesOfASIStateWise.aspx",
+      "description": "ASI Type Selection",
+      "action": "Select '2-Digit Industry State-wise' radio and click Proceed",
+      "radio_id": "rad_grid_7",
+      "proceed_button": "//input[@type='submit' and contains(@value, 'Proceed')]"
+    },
+    {
+      "step": 3,
+      "page": "ASITreeview_TwoDigitIndustry_State.aspx",
+      "description": "Filter Page - Select all criteria",
+      "actions": [
+        {
+          "order": 1,
+          "name": "Select Series",
+          "element": "ctl00_ContentPlaceHolder1_drpSeries",
+          "method": "Select dropdown by visible text",
+          "value": "EPWRF Concorded Series"
+        },
+        {
+          "order": 2,
+          "name": "Select NIC Code",
+          "element": "chk_True_EPWRF Concorded Series_{nodeId}_{description}",
+          "method": "Click checkbox",
+          "example": "chk_True_EPWRF Concorded Series_168_manufacture of wearing apparel"
+        },
+        {
+          "order": 3,
+          "name": "Select States",
+          "method": "Set hidden field OR use JavaScript",
+          "hidden_field": "ctl00_ContentPlaceHolder1_hidList",
+          "format": "State1|State2|State3|",
+          "js_alternative": "drpstate._dropDownList.selectItemByIndex(i)"
+        },
+        {
+          "order": 4,
+          "name": "Select Variables",
+          "method": "Use JavaScript to select in obout dropdown",
+          "js": "cbkSubVariables._dropDownList.selectItemByIndex(i)",
+          "hidden_field": "ctl00_ContentPlaceHolder1_hdSubVariables"
+        },
+        {
+          "order": 5,
+          "name": "Select Year Range",
+          "start_element": "ctl00_ContentPlaceHolder1_drpStartYear",
+          "end_element": "ctl00_ContentPlaceHolder1_drpEndYear",
+          "method": "Select dropdown by value"
+        },
+        {
+          "order": 6,
+          "name": "Submit Form",
+          "pre_action": "document.getElementById('ctl00_ContentPlaceHolder1_hdnsec1').value = ob_t2_list_checked();",
+          "element": "ctl00_ContentPlaceHolder1_btnsubmit",
+          "method": "Click"
+        }
+      ]
+    },
+    {
+      "step": 4,
+      "page": "ASI_TwoDigitDisplayData_Statewise.aspx",
+      "description": "Data Display Page",
+      "action": "Click Export to Excel button",
+      "excel_button_id": "ctl00_ContentPlaceHolder1_ibtnexcel",
+      "excel_button_type": "image",
+      "excel_button_class": "btn_report_export_excel",
+      "back_button_id": "Button2"
+    }
+  ],
+  "elements": {
+    "series_dropdown": {
+      "id": "ctl00_ContentPlaceHolder1_drpSeries",
+      "type": "standard_select",
+      "options": [
+        {
+          "value": "All Series",
+          "text": "All Series"
+        },
+        {
+          "value": "1987      ",
+          "text": "1987"
+        },
+        {
+          "value": "1998",
+          "text": "1998"
+        },
+        {
+          "value": "2004",
+          "text": "2004"
+        },
+        {
+          "value": "EPWRF Concorded Series",
+          "text": "EPWRF Concorded Series"
+        },
+        {
+          "value": "NIC-2008",
+          "text": "NIC-2008"
+        }
+      ]
+    },
+    "nic_tree": {
+      "type": "checkbox_tree",
+      "id_pattern": "chk_True_EPWRF Concorded Series_{nodeId}_{description}",
+      "javascript_function": "ob_t2_list_checked() - returns selected NIC codes",
+      "codes": [
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_162_crop and animal production, hunting and related service activities",
+          "node_id": "162",
+          "description": "crop and animal production, hunting and related service activities"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_163_other mining and quarrying",
+          "node_id": "163",
+          "description": "other mining and quarrying"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_164_manufacture of food products",
+          "node_id": "164",
+          "description": "manufacture of food products"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_165_manufacture of beverages",
+          "node_id": "165",
+          "description": "manufacture of beverages"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_166_manufacture of tobacco products",
+          "node_id": "166",
+          "description": "manufacture of tobacco products"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_167_manufacture of textiles",
+          "node_id": "167",
+          "description": "manufacture of textiles"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_168_manufacture of wearing apparel",
+          "node_id": "168",
+          "description": "manufacture of wearing apparel"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_169_manufacture of leather and related products",
+          "node_id": "169",
+          "description": "manufacture of leather and related products"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_170_manufacture of wood and products of wood and cork, except furniture; manufacture of articles of straw and plaiting materials",
+          "node_id": "170",
+          "description": "manufacture of wood and products of wood and cork, except furniture; manufacture of articles of straw and plaiting materials"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_171_manufacture of paper and paper products",
+          "node_id": "171",
+          "description": "manufacture of paper and paper products"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_172_printing and reproduction of recorded media",
+          "node_id": "172",
+          "description": "printing and reproduction of recorded media"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_173_manufacture of coke and refined petroleum products",
+          "node_id": "173",
+          "description": "manufacture of coke and refined petroleum products"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_174_manufacture of chemicals and chemical products",
+          "node_id": "174",
+          "description": "manufacture of chemicals and chemical products"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_175_manufacture of pharmaceuticals, medicinal chemical and botanical products",
+          "node_id": "175",
+          "description": "manufacture of pharmaceuticals, medicinal chemical and botanical products"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_176_manufacture of rubber and plastics products",
+          "node_id": "176",
+          "description": "manufacture of rubber and plastics products"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_177_manufacture of other non-metallic mineral products",
+          "node_id": "177",
+          "description": "manufacture of other non-metallic mineral products"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_178_manufacture of basic metals",
+          "node_id": "178",
+          "description": "manufacture of basic metals"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_179_manufacture of fabricated metal products, except machinery and equipment",
+          "node_id": "179",
+          "description": "manufacture of fabricated metal products, except machinery and equipment"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_180_manufacture of computer, electronic and optical products",
+          "node_id": "180",
+          "description": "manufacture of computer, electronic and optical products"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_181_manufacture of electrical equipment",
+          "node_id": "181",
+          "description": "manufacture of electrical equipment"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_182_manufacture of machinery and equipment n.e.c.",
+          "node_id": "182",
+          "description": "manufacture of machinery and equipment n.e.c."
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_183_manufacture of motor vehicles, trailers and semi-trailers",
+          "node_id": "183",
+          "description": "manufacture of motor vehicles, trailers and semi-trailers"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_184_manufacture of other transport equipment",
+          "node_id": "184",
+          "description": "manufacture of other transport equipment"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_185_manufacture of furniture",
+          "node_id": "185",
+          "description": "manufacture of furniture"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_186_other manufacturing",
+          "node_id": "186",
+          "description": "other manufacturing"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_187_repair and installation of machinery and equipment",
+          "node_id": "187",
+          "description": "repair and installation of machinery and equipment"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_188_waste collection, treatment and disposal activities; materials recovery",
+          "node_id": "188",
+          "description": "waste collection, treatment and disposal activities; materials recovery"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_189_publishing activities",
+          "node_id": "189",
+          "description": "publishing activities"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_190_Others",
+          "node_id": "190",
+          "description": "Others"
+        },
+        {
+          "checkbox_id": "chk_True_EPWRF Concorded Series_191_Total",
+          "node_id": "191",
+          "description": "Total"
+        }
+      ]
+    },
+    "states_dropdown": {
+      "type": "obout_multiselect_dropdown",
+      "container_id": "ctl00_ContentPlaceHolder1_drpstate_ob_CbodrpstateMainContainer",
+      "items_container_id": "ctl00_ContentPlaceHolder1_drpstate_ob_CbodrpstateItemsContainer",
+      "hidden_field_id": "ctl00_ContentPlaceHolder1_hidList",
+      "hidden_field_format": "StateName1|StateName2|StateName3|",
+      "js_object": "drpstate",
+      "states": [
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl30_StateName_1",
+          "index": 1,
+          "name": "Andhra Pradesh"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl36_StateName_2",
+          "index": 2,
+          "name": "Arunachal Pradesh"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl42_StateName_3",
+          "index": 3,
+          "name": "Assam"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl48_StateName_4",
+          "index": 4,
+          "name": "Bihar"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl54_StateName_5",
+          "index": 5,
+          "name": "Chhattisgarh"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl60_StateName_6",
+          "index": 6,
+          "name": "Goa"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl66_StateName_7",
+          "index": 7,
+          "name": "Gujarat"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl72_StateName_8",
+          "index": 8,
+          "name": "Haryana"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl78_StateName_9",
+          "index": 9,
+          "name": "Himachal Pradesh"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl84_StateName_10",
+          "index": 10,
+          "name": "Jammu & Kashmir"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl90_StateName_11",
+          "index": 11,
+          "name": "Jharkhand"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl96_StateName_12",
+          "index": 12,
+          "name": "Karnataka"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl102_StateName_13",
+          "index": 13,
+          "name": "Kerala"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl108_StateName_14",
+          "index": 14,
+          "name": "Madhya Pradesh"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl114_StateName_15",
+          "index": 15,
+          "name": "Maharashtra"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl120_StateName_16",
+          "index": 16,
+          "name": "Manipur"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl126_StateName_17",
+          "index": 17,
+          "name": "Meghalaya"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl132_StateName_18",
+          "index": 18,
+          "name": "Nagaland"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl138_StateName_19",
+          "index": 19,
+          "name": "Orissa"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl144_StateName_20",
+          "index": 20,
+          "name": "Punjab"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl150_StateName_21",
+          "index": 21,
+          "name": "Rajasthan"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl156_StateName_22",
+          "index": 22,
+          "name": "Sikkim"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl162_StateName_23",
+          "index": 23,
+          "name": "Tamil Nadu"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl168_StateName_24",
+          "index": 24,
+          "name": "Telangana"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl174_StateName_25",
+          "index": 25,
+          "name": "Tripura"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl180_StateName_26",
+          "index": 26,
+          "name": "Uttar Pradesh"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl186_StateName_27",
+          "index": 27,
+          "name": "Uttarakhand"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl192_StateName_28",
+          "index": 28,
+          "name": "West Bengal"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl198_StateName_29",
+          "index": 29,
+          "name": "Andaman & Nicobar Islands "
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl204_StateName_30",
+          "index": 30,
+          "name": "Chandigarh"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl210_StateName_31",
+          "index": 31,
+          "name": "Dadra & Nagar Haveli"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl216_StateName_32",
+          "index": 32,
+          "name": "Daman & Diu"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl222_StateName_33",
+          "index": 33,
+          "name": "Goa, Daman & Diu"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl228_StateName_34",
+          "index": 34,
+          "name": "Delhi"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl234_StateName_35",
+          "index": 35,
+          "name": "Puducherry"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl240_StateName_36",
+          "index": 36,
+          "name": "Mizoram"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl246_StateName_37",
+          "index": 37,
+          "name": "Ladakh"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl252_StateName_38",
+          "index": 38,
+          "name": "Dadra & Nagar Haveli & Daman & Diu"
+        },
+        {
+          "checkbox_id": "ctl00_ContentPlaceHolder1_drpstate_ctl258_Lakshadweep",
+          "index": 39,
+          "name": "Lakshadweep"
+        }
+      ]
+    },
+    "variables_dropdown": {
+      "type": "obout_multiselect_dropdown",
+      "container_id": "ctl00_ContentPlaceHolder1_cbkSubVariables_ob_CbocbkSubVariablesMainContainer",
+      "items_container_id": "ctl00_ContentPlaceHolder1_cbkSubVariables_ob_CbocbkSubVariablesItemsContainer",
+      "hidden_field_id": "ctl00_ContentPlaceHolder1_hdSubVariables",
+      "js_object": "cbkSubVariables",
+      "selection_js": "cbkSubVariables._dropDownList.selectItemByIndex(index)",
+      "variables": [
+        {
+          "index": 1,
+          "text": "Number of Factories",
+          "value": "1"
+        },
+        {
+          "index": 2,
+          "text": "Fixed Capital",
+          "value": "2"
+        },
+        {
+          "index": 3,
+          "text": "Working Capital",
+          "value": "3"
+        },
+        {
+          "index": 4,
+          "text": "Physical Working Capital",
+          "value": "4"
+        },
+        {
+          "index": 5,
+          "text": "Productive Capital",
+          "value": "5"
+        },
+        {
+          "index": 6,
+          "text": "Invested Capital",
+          "value": "6"
+        },
+        {
+          "index": 7,
+          "text": "Outstanding Loans",
+          "value": "7"
+        },
+        {
+          "index": 8,
+          "text": "Fuels Consumed - Total",
+          "value": "8"
+        },
+        {
+          "index": 9,
+          "text": "Materials Consumed",
+          "value": "9"
+        },
+        {
+          "index": 10,
+          "text": "Total Input",
+          "value": "10"
+        },
+        {
+          "index": 11,
+          "text": "Rent Paid",
+          "value": "11"
+        },
+        {
+          "index": 12,
+          "text": "Interest Paid",
+          "value": "12"
+        },
+        {
+          "index": 13,
+          "text": "Depreciation",
+          "value": "13"
+        },
+        {
+          "index": 14,
+          "text": "Products and By-products",
+          "value": "14"
+        },
+        {
+          "index": 15,
+          "text": "Value of Gross Output",
+          "value": "15"
+        },
+        {
+          "index": 16,
+          "text": "Net Income",
+          "value": "16"
+        },
+        {
+          "index": 17,
+          "text": "Profits",
+          "value": "17"
+        },
+        {
+          "index": 18,
+          "text": "Net Value Added",
+          "value": "18"
+        },
+        {
+          "index": 19,
+          "text": "Gross Value Added",
+          "value": "19"
+        },
+        {
+          "index": 20,
+          "text": "Net Fixed Capital Formation",
+          "value": "20"
+        },
+        {
+          "index": 21,
+          "text": "Gross Fixed Capital Formation",
+          "value": "21"
+        },
+        {
+          "index": 22,
+          "text": "Additions to Total Stock",
+          "value": "22"
+        },
+        {
+          "index": 23,
+          "text": "Gross Capital Formation",
+          "value": "23"
+        },
+        {
+          "index": 24,
+          "text": "Total Persons Engaged",
+          "value": "24"
+        },
+        {
+          "index": 25,
+          "text": "Number of Workers",
+          "value": "25"
+        },
+        {
+          "index": 26,
+          "text": "Number of Workers - Directly Employed",
+          "value": "26"
+        },
+        {
+          "index": 27,
+          "text": "Number of Workers - Directly Employed - Men",
+          "value": "27"
+        },
+        {
+          "index": 28,
+          "text": "Number of Workers - Directly Employed - Women",
+          "value": "28"
+        },
+        {
+          "index": 29,
+          "text": "Number of Workers - Employed Through Contractors",
+          "value": "29"
+        },
+        {
+          "index": 30,
+          "text": "Employees Other Than Workers",
+          "value": "30"
+        },
+        {
+          "index": 31,
+          "text": "Supervisory and Managerial Staff",
+          "value": "31"
+        },
+        {
+          "index": 32,
+          "text": "Other Employees",
+          "value": "32"
+        },
+        {
+          "index": 33,
+          "text": "Unpaid family members/proprietor etc",
+          "value": "33"
+        },
+        {
+          "index": 34,
+          "text": "Number of Mandays - Employees",
+          "value": "34"
+        },
+        {
+          "index": 35,
+          "text": "Total Emoluments including Employers' Contribution",
+          "value": "35"
+        },
+        {
+          "index": 36,
+          "text": "Total Emoluments",
+          "value": "36"
+        },
+        {
+          "index": 37,
+          "text": "Wages and Salaries - Total",
+          "value": "37"
+        },
+        {
+          "index": 38,
+          "text": "Wages and Salaries - Workers",
+          "value": "38"
+        },
+        {
+          "index": 39,
+          "text": "Wages and Salaries - Supervisory and Managerial Staff",
+          "value": "39"
+        },
+        {
+          "index": 40,
+          "text": "Wages and Salaries - Other Employees",
+          "value": "40"
+        },
+        {
+          "index": 41,
+          "text": "Bonus to All Staff",
+          "value": "41"
+        },
+        {
+          "index": 42,
+          "text": "PF and Other Benefits",
+          "value": "42"
+        },
+        {
+          "index": 43,
+          "text": "Number of Factories in Operation",
+          "value": "43"
+        },
+        {
+          "index": 44,
+          "text": "Gross Value of Addition to Fixed Capital",
+          "value": "44"
+        },
+        {
+          "index": 45,
+          "text": "Gross Value of Plant and Machinery",
+          "value": "45"
+        },
+        {
+          "index": 46,
+          "text": "Rent Received",
+          "value": "46"
+        },
+        {
+          "index": 47,
+          "text": "Interest Received",
+          "value": "47"
+        },
+        {
+          "index": 48,
+          "text": "Addition in Stock of Materials, Fuels, etc.",
+          "value": "48"
+        },
+        {
+          "index": 49,
+          "text": "Addition in Stock of Semi-Finished Goods",
+          "value": "49"
+        },
+        {
+          "index": 50,
+          "text": "Addition in Stock of Finished Goods",
+          "value": "50"
+        },
+        {
+          "index": 51,
+          "text": "Number of Workers - Directly Employed - Children",
+          "value": "51"
+        },
+        {
+          "index": 52,
+          "text": "Number of Employees",
+          "value": "52"
+        },
+        {
+          "index": 53,
+          "text": "Fuels Consumed - Coal (Quantity)",
+          "value": "53"
+        },
+        {
+          "index": 54,
+          "text": "Fuels Consumed - Coal (Value)",
+          "value": "54"
+        },
+        {
+          "index": 55,
+          "text": "Fuels Consumed - Electricity Purchased (Quantity)",
+          "value": "55"
+        },
+        {
+          "index": 56,
+          "text": "Fuels Consumed - Electricity (Value)",
+          "value": "56"
+        },
+        {
+          "index": 57,
+          "text": "Fuels Consumed - Petroleum Products (Value)",
+          "value": "57"
+        },
+        {
+          "index": 58,
+          "text": "Fuels Consumed - Other Fuel (Value)",
+          "value": "58"
+        }
+      ]
+    },
+    "year_dropdowns": {
+      "start_year": {
+        "id": "ctl00_ContentPlaceHolder1_drpStartYear",
+        "type": "standard_select",
+        "options": [
+          "1979-1980",
+          "1980-1981",
+          "1981-1982",
+          "1982-1983",
+          "1983-1984",
+          "1984-1985",
+          "1985-1986",
+          "1986-1987",
+          "1987-1988",
+          "1988-1989",
+          "1989-1990",
+          "1990-1991",
+          "1991-1992",
+          "1992-1993",
+          "1993-1994",
+          "1994-1995",
+          "1995-1996",
+          "1996-1997",
+          "1997-1998",
+          "1998-1999",
+          "1999-2000",
+          "2000-2001",
+          "2001-2002",
+          "2002-2003",
+          "2003-2004",
+          "2004-2005",
+          "2005-2006",
+          "2006-2007",
+          "2007-2008",
+          "2008-2009",
+          "2009-2010",
+          "2010-2011",
+          "2011-2012",
+          "2012-2013",
+          "2013-2014",
+          "2014-2015",
+          "2015-2016",
+          "2016-2017",
+          "2017-2018",
+          "2018-2019",
+          "2019-2020",
+          "2020-2021",
+          "2021-2022",
+          "2022-2023",
+          "2023-2024"
+        ]
+      },
+      "end_year": {
+        "id": "ctl00_ContentPlaceHolder1_drpEndYear",
+        "type": "standard_select"
+      }
+    },
+    "submit_button": {
+      "id": "ctl00_ContentPlaceHolder1_btnsubmit",
+      "value": "Submit",
+      "onclick": "document.getElementById('ctl00_ContentPlaceHolder1_hdnsec1').value= ob_t2_list_checked();return checkDatatype();",
+      "pre_submit_js": "document.getElementById('ctl00_ContentPlaceHolder1_hdnsec1').value = ob_t2_list_checked();"
+    },
+    "hidden_fields": {
+      "hdnsec1": "ctl00_ContentPlaceHolder1_hdnsec1 - Selected NIC codes (set by ob_t2_list_checked())",
+      "hidList": "ctl00_ContentPlaceHolder1_hidList - Selected states (pipe-separated)",
+      "hdSubVariables": "ctl00_ContentPlaceHolder1_hdSubVariables - Selected variable IDs",
+      "hdMaxVariableSelection": "ctl00_ContentPlaceHolder1_hdMaxVariableSelection - Max 25 variables",
+      "hdModuleId": "ctl00_ContentPlaceHolder1_hdModuleId - Module ID (10 for ASI)",
+      "hdUserName": "ctl00_ContentPlaceHolder1_hdUserName - Logged in user"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "extraction_date": "2026-02-03T02:15:27.107732",
+  "total_files": 0,
+  "test_mode": false,
+  "manufacturing_only": true,
+  "subsections": {},
+  "file_naming_pattern": "sub{SS}_var{VV}_{variable_name}_batch{BB}_nic{XX-YY}.xls",
+  "directory_structure": {
+    "raw": "Raw downloaded XLS files (HTML table format)",
+    "logs": "Extraction logs with timestamps",
+    "database": "SQLite database (after ETL)",
+    "extraction_log.json": "Full metadata for ETL pipeline",
+    "manifest.json": "This summary file"
+  }
+}

@@ -1,0 +1,535 @@
+{
+  "metadata": {
+    "title": "EPWRF ASI (Annual Survey of Industries) Data Dictionary",
+    "created": "2024",
+    "updated": "2026-02-01",
+    "purpose": "Comprehensive dictionary for efficient database storage with integer encoding",
+    "total_subsections": 11,
+    "data_span": "1970-2024"
+  },
+
+  "navigation": {
+    "critical_note": "MUST navigate via clicks from index.aspx - direct URL access causes error.aspx redirect!",
+    "base_url": "https://epwrfits.in/",
+    "entry_point": "index.aspx",
+    "subsection_pages": {
+      "non_statewise": "TypesOfASI.aspx",
+      "statewise": "TypesOfASIStateWise.aspx"
+    },
+    "url_patterns": {
+      "treeview": "ASITreeview_{SubsectionName}.aspx",
+      "display": "ASI_{SubsectionName}DisplayData.aspx"
+    },
+    "flow": [
+      "1. index.aspx (establish session)",
+      "2. TypesOfASI.aspx OR TypesOfASIStateWise.aspx (select radio button)",
+      "3. ASITreeview_*.aspx (tree view - select industry/series/years)",
+      "4. ASI_*DisplayData.aspx (data display - export buttons)"
+    ]
+  },
+
+  "subsections": {
+    "1": {
+      "id": 1, 
+      "name": "2-Digit State-wise", 
+      "radio_button": "rad_grid_1", 
+      "csv": "TwoDigitIndustry_State.csv", 
+      "has_states": true, 
+      "digit_level": 2,
+      "page": "TypesOfASIStateWise.aspx",
+      "treeview_url": "ASITreeview_TwoDigitIndustry_State.aspx",
+      "display_url": "ASI_TwoDigitIndustryDisplayData_State.aspx"
+    },
+    "2": {
+      "id": 2, 
+      "name": "2-Digit Industry", 
+      "radio_button": "rad_grid_1", 
+      "csv": "TwoDigitIndustry.csv", 
+      "has_states": false, 
+      "digit_level": 2,
+      "page": "TypesOfASI.aspx",
+      "treeview_url": "ASITreeview_TwoDigitIndustry.aspx",
+      "display_url": "ASI_TwoDigitIndustryDisplayData.aspx",
+      "explored": "2026-02-01",
+      "validated": true
+    },
+    "3": {
+      "id": 3, 
+      "name": "3-Digit Industry", 
+      "radio_button": "rad_grid_2", 
+      "csv": "ThreeDigitIndustry.csv", 
+      "has_states": false, 
+      "digit_level": 3,
+      "page": "TypesOfASI.aspx",
+      "treeview_url": "ASITreeview_ThreeDigitIndustry.aspx",
+      "display_url": "ASI_ThreeDigitIndustryDisplayData.aspx"
+    },
+    "4": {
+      "id": 4, 
+      "name": "3-Digit State-wise", 
+      "radio_button": "rad_grid_2", 
+      "csv": "ThreeDigitIndustry_State.csv", 
+      "has_states": true, 
+      "digit_level": 3,
+      "page": "TypesOfASIStateWise.aspx",
+      "treeview_url": "ASITreeview_ThreeDigitIndustry_State.aspx",
+      "display_url": "ASI_ThreeDigitIndustryDisplayData_State.aspx"
+    },
+    "5": {
+      "id": 5, 
+      "name": "3-Digit Rural-Urban State-wise", 
+      "radio_button": "rad_grid_3", 
+      "csv": "ThreeDigitIndustry_Rural_State.csv", 
+      "has_states": true, 
+      "digit_level": 3, 
+      "has_rural_urban": true,
+      "page": "TypesOfASIStateWise.aspx",
+      "treeview_url": "ASITreeview_ThreeDigitIndustry_Rural_State.aspx",
+      "display_url": "ASI_ThreeDigitIndustryDisplayData_Rural_State.aspx"
+    },
+    "6": {
+      "id": 6, 
+      "name": "4-Digit Industry", 
+      "radio_button": "rad_grid_3", 
+      "csv": "FourDigitIndustry.csv", 
+      "has_states": false, 
+      "digit_level": 4,
+      "page": "TypesOfASI.aspx",
+      "treeview_url": "ASITreeview_FourDigitIndustry.aspx",
+      "display_url": "ASI_FourDigitIndustryDisplayData.aspx"
+    },
+    "7": {
+      "id": 7, 
+      "name": "Major Industry Groups", 
+      "radio_button": "rad_grid_4", 
+      "csv": "MajorIndustryGroups.csv", 
+      "has_states": false, 
+      "digit_level": 2,
+      "page": "TypesOfASI.aspx",
+      "treeview_url": "ASITreeview_MajorIndustryGroups.aspx",
+      "display_url": "ASI_MajorIndustryGroupsDisplayData.aspx"
+    },
+    "8": {
+      "id": 8, 
+      "name": "Major Classification", 
+      "radio_button": "rad_grid_5", 
+      "csv": "MajarClassification.csv", 
+      "has_states": false, 
+      "digit_level": 0,
+      "page": "TypesOfASI.aspx",
+      "treeview_url": "ASITreeview_MajarClassification.aspx",
+      "display_url": "ASI_MajarClassificationDisplayData.aspx"
+    },
+    "9": {
+      "id": 9, 
+      "name": "Major Classification State-wise", 
+      "radio_button": "rad_grid_4", 
+      "csv": "MajarClassificationStateWise.csv", 
+      "has_states": true, 
+      "digit_level": 0,
+      "page": "TypesOfASIStateWise.aspx",
+      "treeview_url": "ASITreeview_MajarClassificationStateWise.aspx",
+      "display_url": "ASI_MajarClassificationDisplayData_State.aspx"
+    },
+    "10": {
+      "id": 10, 
+      "name": "Employees", 
+      "radio_button": "rad_grid_6", 
+      "csv": "Employees.csv", 
+      "has_states": false, 
+      "digit_level": 3,
+      "page": "TypesOfASI.aspx",
+      "treeview_url": "ASITreeview_Employees.aspx",
+      "display_url": "ASI_EmployeesDisplayData.aspx"
+    },
+    "11": {
+      "id": 11, 
+      "name": "Employees State-wise", 
+      "radio_button": "rad_grid_5", 
+      "csv": "Employees_State.csv", 
+      "has_states": true, 
+      "digit_level": 3,
+      "page": "TypesOfASIStateWise.aspx",
+      "treeview_url": "ASITreeview_Employees_State.aspx",
+      "display_url": "ASI_EmployeesDisplayData_State.aspx"
+    }
+  },
+
+  "series": {
+    "0": {
+      "id": 0, 
+      "name": "NIC-1970", 
+      "short": "1970", 
+      "aliases": ["1970", "NIC-1970"],
+      "year_range": {"from": "1973-1974", "to": "1988-1989"}, 
+      "notes": "Early NIC classification. Discovered in web interface dropdown. Limited availability."
+    },
+    "1": {
+      "id": 1, 
+      "name": "NIC-1987", 
+      "short": "1987", 
+      "aliases": ["1987", "NIC-1987", "NIC- 1987"],
+      "year_range": {"from": "1970-1971", "to": "1997-1998"}, 
+      "notes": "Based on NIC-1987 classification. Used retrospectively for historical data back to 1970."
+    },
+    "2": {
+      "id": 2, 
+      "name": "NIC-1998", 
+      "short": "1998", 
+      "aliases": ["1998", "NIC-1998"],
+      "year_range": {"from": "1998-1999", "to": "2003-2004"}, 
+      "notes": "Based on NIC-1998 classification"
+    },
+    "3": {
+      "id": 3, 
+      "name": "NIC-2004", 
+      "short": "2004", 
+      "aliases": ["2004", "NIC-2004"],
+      "year_range": {"from": "2004-2005", "to": "2007-2008"}, 
+      "notes": "Based on NIC-2004 classification"
+    },
+    "4": {
+      "id": 4, 
+      "name": "NIC-2008", 
+      "short": "NIC-2008", 
+      "aliases": ["NIC-2008", "NIC 2008"],
+      "year_range": {"from": "2008-2009", "to": "2023-2024"}, 
+      "notes": "Current NIC classification"
+    },
+    "5": {
+      "id": 5, 
+      "name": "EPWRF Concorded Series", 
+      "short": "EPWRF", 
+      "aliases": ["EPWRF Concorded Series", "EPWRF"],
+      "year_range": {"from": "1973-1974", "to": "2023-2024"}, 
+      "notes": "Harmonized long-term series by EPWRF spanning all NIC versions"
+    }
+  },
+
+  "form_elements": {
+    "treeview_page": {
+      "series_dropdown": "ctl00_ContentPlaceHolder1_drpSeries",
+      "start_year_dropdown": "ctl00_ContentPlaceHolder1_drpStartYear",
+      "end_year_dropdown": "ctl00_ContentPlaceHolder1_drpEndYear",
+      "back_button": "ctl00_ContentPlaceHolder1_btnBack",
+      "submit_button": "ctl00_ContentPlaceHolder1_btnsubmit"
+    },
+    "subtree_ajax": {
+      "url_pattern": "subASITreeview_{subsection}.aspx?sNodeId={nodeId}&index=0"
+    }
+  },
+
+  "group_types": {
+    "1": {"id": 1, "name": "Principal Characteristics By State and By Major Industry Groups (2-Digit)"},
+    "2": {"id": 2, "name": "Principal Characteristics By State and By Major Industry Groups (3-Digit)"},
+    "3": {"id": 3, "name": "Principal Characteristics By State and By Rural and Urban Break-up"},
+    "4": {"id": 4, "name": "Physical Characteristics By States"},
+    "5": {"id": 5, "name": "Major Industry Group & Rural-Urban Breakup for States (3-Digit)"}
+  },
+
+  "data_types": {
+    "1": {"id": 1, "name": "Major Industry Group for States (2-Digit)"},
+    "2": {"id": 2, "name": "Major Industry Group for States (3-Digit)"},
+    "3": {"id": 3, "name": "Major Industry Group & Rural-Urban Breakup for States (3-Digit)"},
+    "4": {"id": 4, "name": "Major Classification of Factories by States"},
+    "5": {"id": 5, "name": "Employment Size"},
+    "6": {"id": 6, "name": "Principal Characteristics By Major Economic Activity"},
+    "7": {"id": 7, "name": "By Rural-Urban Break-up"},
+    "8": {"id": 8, "name": "By Size of Capital"},
+    "9": {"id": 9, "name": "By Size of Employment"},
+    "10": {"id": 10, "name": "By Size of Gross Output"},
+    "11": {"id": 11, "name": "By Size of Net Value Added"},
+    "12": {"id": 12, "name": "By Type of Organisation"},
+    "13": {"id": 13, "name": "By Type of Ownership"},
+    "14": {"id": 14, "name": "EPWRF Concorded Series"},
+    "15": {"id": 15, "name": "NIC-1987"},
+    "16": {"id": 16, "name": "NIC-1998"},
+    "17": {"id": 17, "name": "NIC-2004"},
+    "18": {"id": 18, "name": "NIC-2008"}
+  },
+
+  "variables": {
+    "1": {"id": 1, "name": "Number of Factories"},
+    "2": {"id": 2, "name": "Number of Workers"},
+    "3": {"id": 3, "name": "Number of Employees"},
+    "4": {"id": 4, "name": "Total Persons Engaged"},
+    "5": {"id": 5, "name": "Total Emoluments"},
+    "6": {"id": 6, "name": "Wages and Salaries - Total"},
+    "7": {"id": 7, "name": "Wages and Salaries - Workers"},
+    "8": {"id": 8, "name": "PF and Other Benefits"},
+    "9": {"id": 9, "name": "Fixed Capital"},
+    "10": {"id": 10, "name": "Working Capital"},
+    "11": {"id": 11, "name": "Physical Working Capital"},
+    "12": {"id": 12, "name": "Invested Capital"},
+    "13": {"id": 13, "name": "Productive Capital"},
+    "14": {"id": 14, "name": "Outstanding Loans"},
+    "15": {"id": 15, "name": "Total Input"},
+    "16": {"id": 16, "name": "Materials Consumed"},
+    "17": {"id": 17, "name": "Fuels Consumed - Total"},
+    "18": {"id": 18, "name": "Value of Gross Output"},
+    "19": {"id": 19, "name": "Products and By-products"},
+    "20": {"id": 20, "name": "Gross Value Added"},
+    "21": {"id": 21, "name": "Net Value Added"},
+    "22": {"id": 22, "name": "Depreciation"},
+    "23": {"id": 23, "name": "Net Income"},
+    "24": {"id": 24, "name": "Profits"},
+    "25": {"id": 25, "name": "Rent Paid"},
+    "26": {"id": 26, "name": "Rent Received"},
+    "27": {"id": 27, "name": "Interest Paid"},
+    "28": {"id": 28, "name": "Interest Received"},
+    "29": {"id": 29, "name": "Gross Fixed Capital Formation"},
+    "30": {"id": 30, "name": "Net Fixed Capital Formation"},
+    "31": {"id": 31, "name": "Gross Capital Formation"},
+    "32": {"id": 32, "name": "Additions to Total Stock"},
+    "33": {"id": 33, "name": "Addition in Stock of Finished Goods"},
+    "34": {"id": 34, "name": "Addition in Stock of Semi-Finished Goods"},
+    "35": {"id": 35, "name": "Addition in Stock of Materials, Fuels, etc."},
+    "36": {"id": 36, "name": "Number of Mandays - Workers"},
+    "37": {"id": 37, "name": "Number of Mandays - Employees"},
+    "38": {"id": 38, "name": "Number of Man Hours"}
+  },
+
+  "states": {
+    "1": {"id": 1, "name": "All India", "code": "IN"},
+    "2": {"id": 2, "name": "Andaman & Nicobar Islands", "code": "AN"},
+    "3": {"id": 3, "name": "Andhra Pradesh", "code": "AP"},
+    "4": {"id": 4, "name": "Arunachal Pradesh", "code": "AR"},
+    "5": {"id": 5, "name": "Assam", "code": "AS"},
+    "6": {"id": 6, "name": "Bihar", "code": "BR"},
+    "7": {"id": 7, "name": "Chandigarh", "code": "CH"},
+    "8": {"id": 8, "name": "Chhattisgarh", "code": "CG"},
+    "9": {"id": 9, "name": "Dadra & Nagar Haveli", "code": "DN"},
+    "10": {"id": 10, "name": "Dadra and Nagar Haveli and Daman and Diu", "code": "DD"},
+    "11": {"id": 11, "name": "Daman & Diu", "code": "DM"},
+    "12": {"id": 12, "name": "Delhi", "code": "DL"},
+    "13": {"id": 13, "name": "Goa", "code": "GA"},
+    "14": {"id": 14, "name": "Gujarat", "code": "GJ"},
+    "15": {"id": 15, "name": "Haryana", "code": "HR"},
+    "16": {"id": 16, "name": "Himachal Pradesh", "code": "HP"},
+    "17": {"id": 17, "name": "Jammu & Kashmir", "code": "JK"},
+    "18": {"id": 18, "name": "Jharkhand", "code": "JH"},
+    "19": {"id": 19, "name": "Karnataka", "code": "KA"},
+    "20": {"id": 20, "name": "Kerala", "code": "KL"},
+    "21": {"id": 21, "name": "Ladakh", "code": "LA"},
+    "22": {"id": 22, "name": "Lakshadweep", "code": "LD"},
+    "23": {"id": 23, "name": "Madhya Pradesh", "code": "MP"},
+    "24": {"id": 24, "name": "Maharashtra", "code": "MH"},
+    "25": {"id": 25, "name": "Manipur", "code": "MN"},
+    "26": {"id": 26, "name": "Meghalaya", "code": "ML"},
+    "27": {"id": 27, "name": "Mizoram", "code": "MZ"},
+    "28": {"id": 28, "name": "Nagaland", "code": "NL"},
+    "29": {"id": 29, "name": "Odisha", "code": "OD"},
+    "30": {"id": 30, "name": "Pondicherry", "code": "PY"},
+    "31": {"id": 31, "name": "Punjab", "code": "PB"},
+    "32": {"id": 32, "name": "Rajasthan", "code": "RJ"},
+    "33": {"id": 33, "name": "Sikkim", "code": "SK"},
+    "34": {"id": 34, "name": "Tamil Nadu", "code": "TN"},
+    "35": {"id": 35, "name": "Telangana", "code": "TS"},
+    "36": {"id": 36, "name": "Tripura", "code": "TR"},
+    "37": {"id": 37, "name": "Uttar Pradesh", "code": "UP"},
+    "38": {"id": 38, "name": "Uttarakhand", "code": "UK"},
+    "39": {"id": 39, "name": "West Bengal", "code": "WB"}
+  },
+
+  "years": {
+    "description": "Year encoding: Use fiscal year start as ID (e.g., 1970 for 1970-1971)",
+    "range": {"min": 1970, "max": 2024},
+    "format": "YYYY-YYYY (e.g., 1970-1971)"
+  },
+
+  "industries_2digit": {
+    "description": "2-Digit NIC Industries - ~60 unique industries across all series",
+    "sample_industries": [
+      "Food Products",
+      "Beverages, Tobacco and Related Products",
+      "Cotton Textiles",
+      "Wool, Silk and man-made fibre textiles",
+      "Jute and other vegetable fibre Textiles (except cotton)",
+      "Textile Products (including Wearing Apparel)",
+      "Wood and Wood Products; Furniture and Fixtures",
+      "Paper & Paper Products and Printing, Publishing & Allied Industries",
+      "Leather and Leather & Fur Products",
+      "Basic Chemicals & Chemical Products",
+      "Rubber, Plastic, Petroleum and Coal Products",
+      "Non-Metallic Mineral Products",
+      "Basic Metal and Alloy Industries",
+      "Metal Products and Parts, except Machinery and Equipment",
+      "Machinery, Machine Tools and Parts Except Electrical Machinery",
+      "Electrical Machinery Apparatus, Appliances and Supplies and Parts",
+      "Transport Equipment and Parts",
+      "Other Manufacturing Industries",
+      "Manufacture of coke and refined petroleum products",
+      "Manufacture of chemicals and chemical products",
+      "Manufacture of pharmaceuticals, medicinal chemical and botanical products",
+      "Manufacture of rubber and plastics products",
+      "Manufacture of other non-metallic mineral products",
+      "Manufacture of Basic Metals",
+      "Manufacture of fabricated metal products, except machinery and equipment",
+      "Manufacture of computer, electronic and optical products",
+      "Manufacture of electrical equipment",
+      "Manufacture of machinery and equipment n.e.c",
+      "Manufacture of motor vehicles, trailers and semi-trailers",
+      "Manufacture of other transport equipment"
+    ],
+    "count_by_series": {
+      "NIC-1987": 56,
+      "NIC-1998": 58,
+      "NIC-2004": 60,
+      "NIC-2008": 62,
+      "EPWRF": 58
+    }
+  },
+
+  "industries_3digit": {
+    "description": "3-Digit NIC Industries - ~170+ unique industries across all series",
+    "count_by_series": {
+      "NIC-1987": 170,
+      "NIC-1998": 78,
+      "EPWRF": 102
+    },
+    "note": "3-digit data available for limited series in some subsections"
+  },
+
+  "industries_4digit": {
+    "description": "4-Digit NIC Industries - ~130 industries for NIC-1998 & NIC-2004, ~210 for NIC-2008",
+    "count_by_series": {
+      "NIC-1998": 128,
+      "NIC-2004": 140,
+      "NIC-2008": 210
+    },
+    "note": "Highest granularity but limited year ranges"
+  },
+
+  "classification_categories": {
+    "description": "Major Classification subsection categories (beyond industry groupings)",
+    "categories": [
+      "Employment Size",
+      "By Type of Organisation",
+      "By Type of Ownership",
+      "By Rural-Urban Break-up",
+      "By Size of Capital",
+      "By Size of Employment",
+      "By Size of Gross Output",
+      "By Size of Net Value Added"
+    ]
+  },
+
+  "data_availability_summary": {
+    "subsection_1_2digit_state": {
+      "series": ["1987", "1998", "2004", "NIC-2008", "EPWRF"],
+      "states": 39,
+      "industries_per_series": 60,
+      "variables": 38,
+      "years": "1979-2024"
+    },
+    "subsection_2_2digit": {
+      "series": ["1987", "1998", "2004", "NIC-2008", "EPWRF"],
+      "industries_per_series": 60,
+      "variables": 38,
+      "years": "1973-2024"
+    },
+    "subsection_3_3digit": {
+      "series": ["EPWRF", "NIC-1987"],
+      "industries": {"EPWRF": 102, "NIC-1987": 170},
+      "variables": 38,
+      "years": {"EPWRF": "1973-2024", "NIC-1987": "1989-1997"}
+    },
+    "subsection_4_3digit_state": {
+      "series": ["1987"],
+      "states": 39,
+      "industries": 170,
+      "variables": 38,
+      "years": "1980-1997"
+    },
+    "subsection_5_3digit_rural_urban": {
+      "series": ["1998"],
+      "states": 39,
+      "industries": 80,
+      "has_rural_urban": true,
+      "variables": 38,
+      "years": "1998-2002"
+    },
+    "subsection_6_4digit": {
+      "series": ["NIC-1998", "NIC-2004", "NIC-2008"],
+      "industries": {"NIC-1998": 128, "NIC-2004": 140, "NIC-2008": 210},
+      "variables": 38,
+      "years": "1998-2024"
+    },
+    "subsection_7_major_groups": {
+      "series": ["NIC-1987", "NIC-1998", "NIC-2004", "NIC-2008", "EPWRF"],
+      "industries": 30,
+      "variables": 38,
+      "years": "1987-2024"
+    },
+    "subsection_8_classification": {
+      "series": ["1987"],
+      "categories": 9,
+      "variables": 38,
+      "years": "1970-1997"
+    },
+    "subsection_9_classification_state": {
+      "series": ["1987", "1998", "2004", "NIC-2008"],
+      "states": 39,
+      "group_types": 2,
+      "variables": 38,
+      "years": "1970-2024"
+    },
+    "subsection_10_employees": {
+      "series": ["EPWRF", "NIC-1998", "NIC-2004", "NIC-2008"],
+      "industries": {"EPWRF": 102, "NIC-1998": 200, "NIC-2004": 240, "NIC-2008": 210},
+      "variables": 38,
+      "years": "1973-2024"
+    },
+    "subsection_11_employees_state": {
+      "series": ["EPWRF", "NIC-1998", "NIC-2004", "NIC-2008"],
+      "states": 39,
+      "industries": {"EPWRF": 102, "NIC-1998": 200, "NIC-2004": 240, "NIC-2008": 210},
+      "variables": 38,
+      "years": "1973-2024"
+    }
+  },
+
+  "storage_schema": {
+    "description": "Recommended database schema for efficient storage",
+    "fact_table": {
+      "name": "asi_data",
+      "columns": [
+        {"name": "subsection_id", "type": "TINYINT", "bytes": 1},
+        {"name": "series_id", "type": "TINYINT", "bytes": 1},
+        {"name": "state_id", "type": "TINYINT", "bytes": 1, "nullable": true},
+        {"name": "industry_id", "type": "SMALLINT", "bytes": 2},
+        {"name": "variable_id", "type": "TINYINT", "bytes": 1},
+        {"name": "year", "type": "SMALLINT", "bytes": 2},
+        {"name": "value", "type": "FLOAT", "bytes": 4}
+      ],
+      "bytes_per_row": 12,
+      "indexes": ["(subsection_id, series_id, state_id, industry_id, variable_id, year)"]
+    },
+    "dimension_tables": [
+      "dim_subsections",
+      "dim_series",
+      "dim_states",
+      "dim_industries_2digit",
+      "dim_industries_3digit",
+      "dim_industries_4digit",
+      "dim_variables"
+    ],
+    "estimated_rows": {
+      "2digit_state": "5 series × 60 industries × 39 states × 38 variables × 45 years = ~200M rows max",
+      "3digit": "2 series × 170 industries × 38 variables × 30 years = ~400K rows",
+      "4digit": "3 series × 200 industries × 38 variables × 20 years = ~450K rows",
+      "total_estimated": "~5-10M actual data points (sparse matrix)"
+    }
+  },
+
+  "extraction_notes": {
+    "dropdown_navigation": {
+      "series_dropdown": "obout_DropDownTree_1",
+      "industry_dropdown": "obout_DropDownTree_2",
+      "state_dropdown": "obout_DropDownTree_3 (when applicable)",
+      "variable_dropdown": "obout_DropDownTree_4 or obout_DropDownTree_3"
+    },
+    "javascript_api": "obout_ASPTreeView_1_ov().getSelectedNodes()",
+    "csv_generation": "Navigate > Select > Generate CSV > Parse"
+  }
+}

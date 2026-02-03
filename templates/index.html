@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPWRF Bulk Data Downloader</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-dark: #1e293b;
+            --bg-card: #334155;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        .container { max-width: 1400px; }
+        
+        .card {
+            background: rgba(51, 65, 85, 0.7);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .card-header {
+            background: rgba(37, 99, 235, 0.2);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            font-weight: 600;
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border: none;
+            padding: 12px 32px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+        }
+        
+        .selection-box {
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .selection-box::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .selection-box::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+        
+        .selection-box::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        
+        .log-box {
+            height: 250px;
+            overflow-y: auto;
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+        }
+        
+        .log-entry {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        
+        .log-entry.info { color: #94a3b8; }
+        .log-entry.success { color: var(--success); }
+        .log-entry.warning { color: var(--warning); }
+        .log-entry.error { color: var(--danger); }
+        
+        .progress {
+            height: 24px;
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.5);
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--success) 100%);
+            border-radius: 12px;
+            transition: width 0.5s ease;
+        }
+        
+        .stat-card {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .form-select, .form-control {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            color: #e2e8f0;
+            border-radius: 8px;
+        }
+        
+        .form-select:focus, .form-control:focus {
+            background: rgba(15, 23, 42, 0.7);
+            border-color: var(--primary);
+            color: #e2e8f0;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+        
+        .select-all-btn {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            background: rgba(37, 99, 235, 0.2);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            transition: all 0.2s;
+        }
+        
+        .select-all-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .header-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status-ready { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .status-running { background: rgba(37, 99, 235, 0.2); color: var(--primary); }
+        .status-stopped { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .running-indicator {
+            animation: pulse 1.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <!-- Header -->
+        <div class="d-flex align-items-center mb-4">
+            <div class="header-icon me-3">
+                <i class="bi bi-cloud-download"></i>
+            </div>
+            <div>
+                <h1 class="h3 mb-0">EPWRF Bulk Data Downloader</h1>
+                <small class="text-muted">ASI 2-Digit Industry Groups - State-wise Data</small>
+            </div>
+            <div class="ms-auto">
+                <span id="statusBadge" class="status-badge status-ready">
+                    <i class="bi bi-circle-fill" style="font-size: 8px;"></i>
+                    Ready
+                </span>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Left Column: Selection -->
+            <div class="col-lg-8">
+                <div class="row g-4">
+                    <!-- NIC Codes -->
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-diagram-3 me-2"></i>NIC Codes</span>
+                                <div>
+                                    <span class="select-all-btn" onclick="selectAll('nic', true)">All</span>
+                                    <span class="select-all-btn" onclick="selectAll('nic', false)">None</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="selection-box" id="nicContainer">
+                                    {% for code, name in nic_codes.items() %}
+                                    <div class="form-check">
+                                        <input class="form-check-input nic-check" type="checkbox" 
+                                               value="{{ code }}" id="nic_{{ code }}"
+                                               {% if code == '168' %}checked{% endif %}>
+                                        <label class="form-check-label" for="nic_{{ code }}">{{ name }}</label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- States -->
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-geo-alt me-2"></i>States/UTs</span>
+                                <div>
+                                    <span class="select-all-btn" onclick="selectAll('state', true)">All</span>
+                                    <span class="select-all-btn" onclick="selectAll('state', false)">None</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="selection-box" id="stateContainer">
+                                    {% for state in states %}
+                                    <div class="form-check">
+                                        <input class="form-check-input state-check" type="checkbox" 
+                                               value="{{ state }}" id="state_{{ loop.index }}" checked>
+                                        <label class="form-check-label" for="state_{{ loop.index }}">{{ state }}</label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Variables -->
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-list-check me-2"></i>Variables (58 available)</span>
+                                <div>
+                                    <span class="select-all-btn" onclick="selectAll('var', true)">All</span>
+                                    <span class="select-all-btn" onclick="selectAll('var', false)">None</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="selection-box" style="max-height: 200px;" id="varContainer">
+                                    <div class="row">
+                                        {% for id, name in variables.items() %}
+                                        <div class="col-md-6 col-lg-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input var-check" type="checkbox" 
+                                                       value="{{ id }}" id="var_{{ id }}" checked>
+                                                <label class="form-check-label small" for="var_{{ id }}">{{ name }}</label>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Controls & Log -->
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-calendar-range me-2"></i>Year Range
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="form-label small">From</label>
+                                <select class="form-select" id="startYear">
+                                    {% for year in years %}
+                                    <option value="{{ year }}" {% if year == '1979-1980' %}selected{% endif %}>{{ year }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small">To</label>
+                                <select class="form-select" id="endYear">
+                                    {% for year in years %}
+                                    <option value="{{ year }}" {% if year == '2023-2024' %}selected{% endif %}>{{ year }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="row g-3 mb-4">
+                    <div class="col-4">
+                        <div class="stat-card">
+                            <div class="stat-number" id="selectedNIC">1</div>
+                            <small class="text-muted">NIC Codes</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="stat-card">
+                            <div class="stat-number" id="selectedStates">39</div>
+                            <small class="text-muted">States</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="stat-card">
+                            <div class="stat-number" id="selectedVars">58</div>
+                            <small class="text-muted">Variables</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Progress</span>
+                            <span id="progressText">0 / 0</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-grid gap-2 mb-4">
+                    <button class="btn btn-primary btn-lg" id="startBtn" onclick="startDownload()">
+                        <i class="bi bi-play-fill me-2"></i>Start Download
+                    </button>
+                    <button class="btn btn-danger" id="stopBtn" onclick="stopDownload()" disabled>
+                        <i class="bi bi-stop-fill me-2"></i>Stop
+                    </button>
+                </div>
+
+                <!-- Log -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-terminal me-2"></i>Activity Log</span>
+                        <span class="select-all-btn" onclick="clearLog()">Clear</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="log-box" id="logBox">
+                            <div class="log-entry info">
+                                <span class="text-muted">[System]</span> Ready. Select options and start download.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-4 text-muted small">
+            <p><i class="bi bi-info-circle me-1"></i> Ensure you're connected to college WiFi for IP-based authentication</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        const socket = io();
+        let isRunning = false;
+
+        // Socket event handlers
+        socket.on('connect', () => {
+            addLog('Connected to server', 'success');
+        });
+
+        socket.on('disconnect', () => {
+            addLog('Disconnected from server', 'error');
+        });
+
+        socket.on('status', (data) => {
+            addLog(data.message, data.type);
+        });
+
+        socket.on('progress', (data) => {
+            updateProgress(data.current, data.total, data.percent);
+        });
+
+        socket.on('download_complete', () => {
+            isRunning = false;
+            updateUI();
+            addLog('All downloads completed!', 'success');
+        });
+
+        // Functions
+        function selectAll(type, checked) {
+            const checkboxes = document.querySelectorAll(`.${type}-check`);
+            checkboxes.forEach(cb => cb.checked = checked);
+            updateCounts();
+        }
+
+        function updateCounts() {
+            document.getElementById('selectedNIC').textContent = 
+                document.querySelectorAll('.nic-check:checked').length;
+            document.getElementById('selectedStates').textContent = 
+                document.querySelectorAll('.state-check:checked').length;
+            document.getElementById('selectedVars').textContent = 
+                document.querySelectorAll('.var-check:checked').length;
+        }
+
+        function startDownload() {
+            const nicCodes = Array.from(document.querySelectorAll('.nic-check:checked')).map(cb => cb.value);
+            const states = Array.from(document.querySelectorAll('.state-check:checked')).map(cb => cb.value);
+            const variables = Array.from(document.querySelectorAll('.var-check:checked')).map(cb => cb.value);
+            const startYear = document.getElementById('startYear').value;
+            const endYear = document.getElementById('endYear').value;
+
+            if (nicCodes.length === 0 || states.length === 0 || variables.length === 0) {
+                addLog('Please select at least one NIC code, state, and variable', 'warning');
+                return;
+            }
+
+            isRunning = true;
+            updateUI();
+
+            socket.emit('start_download', {
+                nic_codes: nicCodes,
+                states: states,
+                variables: variables,
+                start_year: startYear,
+                end_year: endYear
+            });
+
+            addLog(`Starting download: ${nicCodes.length} NIC × ${variables.length} variables`, 'info');
+        }
+
+        function stopDownload() {
+            socket.emit('stop_download');
+            isRunning = false;
+            updateUI();
+        }
+
+        function updateUI() {
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            const statusBadge = document.getElementById('statusBadge');
+
+            startBtn.disabled = isRunning;
+            stopBtn.disabled = !isRunning;
+
+            if (isRunning) {
+                statusBadge.className = 'status-badge status-running';
+                statusBadge.innerHTML = '<i class="bi bi-circle-fill running-indicator" style="font-size: 8px;"></i> Running';
+            } else {
+                statusBadge.className = 'status-badge status-ready';
+                statusBadge.innerHTML = '<i class="bi bi-circle-fill" style="font-size: 8px;"></i> Ready';
+            }
+        }
+
+        function updateProgress(current, total, percent) {
+            document.getElementById('progressText').textContent = `${current} / ${total}`;
+            document.getElementById('progressBar').style.width = `${percent}%`;
+        }
+
+        function addLog(message, type = 'info') {
+            const logBox = document.getElementById('logBox');
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerHTML = `<span class="text-muted">[${time}]</span> ${message}`;
+            logBox.appendChild(entry);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('logBox').innerHTML = '';
+            addLog('Log cleared', 'info');
+        }
+
+        // Event listeners for count updates
+        document.querySelectorAll('.nic-check, .state-check, .var-check').forEach(cb => {
+            cb.addEventListener('change', updateCounts);
+        });
+
+        // Initial count
+        updateCounts();
+    </script>
+</body>
+</html>

@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPWRF ASI Data Explorer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            opacity: 0.9;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 20px;
+        }
+        
+        .card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .filter-section {
+            margin-bottom: 20px;
+        }
+        
+        .filter-section label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+        }
+        
+        .filter-section small {
+            color: #888;
+            display: block;
+            margin-top: 5px;
+        }
+        
+        select, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        select[multiple] {
+            height: 150px;
+        }
+        
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+        }
+        
+        .checkbox-item input {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .quick-select {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .quick-select button {
+            padding: 5px 10px;
+            font-size: 12px;
+            border: 1px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .quick-select button:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        /* Results Panel */
+        .results-panel {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 160px);
+            min-height: 500px;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .results-stats {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .table-container {
+            flex: 1;
+            overflow: auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            color: #888;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e0e0e0;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .status-bar {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .format-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .format-toggle label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 600px) {
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-stats {
+                flex-wrap: wrap;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 EPWRF ASI Data Explorer</h1>
+            <p>Annual Survey of Industries - 2-Digit Industry Groups (State-wise)</p>
+        </header>
+        
+        <div class="main-grid">
+            <!-- Filter Panel -->
+            <div class="card">
+                <h3>🔍 Select Data</h3>
+                
+                <!-- NIC Code Selection -->
+                <div class="filter-section">
+                    <label>Industry (NIC Code)</label>
+                    <select id="nicSelect">
+                        <option value="14" selected>14 - Manufacture of Wearing Apparel</option>
+                        <!-- More NIC codes can be added when data is available -->
+                    </select>
+                </div>
+                
+                <!-- Variables Selection -->
+                <div class="filter-section">
+                    <label>Variables</label>
+                    <div class="quick-select">
+                        <button onclick="selectAll('variables')">All</button>
+                        <button onclick="selectNone('variables')">None</button>
+                        <button onclick="selectCategory('key')">Key Vars</button>
+                    </div>
+                    <div class="checkbox-grid" id="variablesGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                    <small id="varCount">0 selected</small>
+                </div>
+                
+                <!-- States Selection -->
+                <div class="filter-section">
+                    <label>States/UTs</label>
+                    <div class="quick-select">
+                        <button onclick="selectAll('states')">All</button>
+                        <button onclick="selectNone('states')">None</button>
+                        <button onclick="selectCategory('major')">Major States</button>
+                    </div>
+                    <div class="checkbox-grid" id="statesGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                    <small id="stateCount">0 selected</small>
+                </div>
+                
+                <!-- Year Range -->
+                <div class="filter-section">
+                    <label>Year Range</label>
+                    <div style="display: flex; gap: 10px;">
+                        <select id="startYear"></select>
+                        <span style="align-self: center;">to</span>
+                        <select id="endYear"></select>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="loadData()" id="loadBtn">
+                        📥 Load Data
+                    </button>
+                </div>
+                
+                <div class="status-bar" id="statusBar">
+                    Ready. Select your filters and click Load Data.
+                </div>
+            </div>
+            
+            <!-- Results Panel -->
+            <div class="card results-panel">
+                <div class="results-header">
+                    <h3>📋 Results</h3>
+                    <div class="results-stats">
+                        <div class="stat">
+                            <div class="stat-value" id="rowCount">0</div>
+                            <div class="stat-label">Rows</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="colCount">0</div>
+                            <div class="stat-label">Columns</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="format-toggle">
+                    <label><input type="radio" name="format" value="long" checked onchange="reformatData()"> Long Format</label>
+                    <label><input type="radio" name="format" value="wide" onchange="reformatData()"> Wide Format</label>
+                </div>
+                
+                <div class="table-container" id="tableContainer">
+                    <div class="loading" id="placeholder">
+                        Select filters and click "Load Data" to view results
+                    </div>
+                </div>
+                
+                <div class="btn-group" style="margin-top: 15px;">
+                    <button class="btn btn-success" onclick="exportCSV()" id="exportCsvBtn" disabled>
+                        📄 Export CSV
+                    </button>
+                    <button class="btn btn-success" onclick="exportExcel()" id="exportExcelBtn" disabled>
+                        📊 Export Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SheetJS for Excel export -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    
+    <script>
+        // =====================================================================
+        // CONFIGURATION & DATA
+        // =====================================================================
+        
+        const CONFIG = {
+            dataPath: './data/',  // Path to JSON data files
+            
+            variables: {
+                1: "Number of Factories",
+                2: "Fixed Capital",
+                3: "Working Capital",
+                4: "Physical Working Capital",
+                5: "Productive Capital",
+                6: "Invested Capital",
+                7: "Outstanding Loans",
+                8: "Fuels Consumed Total",
+                9: "Materials Consumed",
+                10: "Total Input",
+                11: "Rent Paid",
+                12: "Interest Paid",
+                13: "Depreciation",
+                14: "Products and By-products",
+                15: "Value of Gross Output",
+                16: "Net Income",
+                17: "Profits",
+                18: "Net Value Added",
+                19: "Gross Value Added",
+                20: "Net Fixed Capital Formation",
+                21: "Gross Fixed Capital Formation",
+                22: "Additions to Total Stock",
+                23: "Gross Capital Formation",
+                24: "Total Persons Engaged",
+                25: "Number of Workers",
+                26: "Workers Directly Employed",
+                27: "Workers Men",
+                28: "Workers Women",
+                29: "Workers Through Contractors",
+                30: "Employees Other Than Workers",
+                31: "Supervisory Staff",
+                32: "Other Employees",
+                33: "Unpaid Family Members",
+                34: "Mandays Employees",
+                35: "Total Emoluments incl Employers",
+                36: "Total Emoluments",
+                37: "Wages Total",
+                38: "Wages Workers",
+                39: "Wages Supervisory",
+                40: "Wages Other Employees",
+                41: "Bonus",
+                42: "PF and Benefits",
+                43: "Factories in Operation",
+                44: "Gross Value Addition Fixed Capital",
+                45: "Gross Value Plant Machinery",
+                46: "Rent Received",
+                47: "Interest Received",
+                48: "Addition Stock Materials",
+                49: "Addition Stock Semi-Finished",
+                50: "Addition Stock Finished",
+                51: "Workers Children",
+                52: "Number of Employees",
+                53: "Coal Quantity",
+                54: "Coal Value",
+                55: "Electricity Quantity",
+                56: "Electricity Value",
+                57: "Petroleum Value",
+                58: "Other Fuel Value"
+            },
+            
+            keyVariables: [1, 2, 15, 18, 19, 24, 25, 37], // Key economic indicators
+            
+            states: [
+                "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+                "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jammu & Kashmir",
+                "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra",
+                "Manipur", "Meghalaya", "Nagaland", "Orissa", "Punjab", "Rajasthan",
+                "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh",
+                "Uttarakhand", "West Bengal", "Andaman & Nicobar Islands", "Chandigarh",
+                "Dadra & Nagar Haveli", "Daman & Diu", "Goa, Daman & Diu", "Delhi",
+                "Puducherry", "Mizoram", "Ladakh", "Dadra & Nagar Haveli & Daman & Diu",
+                "Lakshadweep"
+            ],
+            
+            majorStates: [
+                "Andhra Pradesh", "Gujarat", "Karnataka", "Kerala", "Madhya Pradesh",
+                "Maharashtra", "Punjab", "Rajasthan", "Tamil Nadu", "Telangana",
+                "Uttar Pradesh", "West Bengal", "Delhi", "Haryana", "Bihar"
+            ],
+            
+            years: Array.from({length: 44}, (_, i) => `${1980 + i} - ${1981 + i}`)
+        };
+        
+        // Current data state
+        let currentData = null;
+        let filteredData = null;
+        
+        // =====================================================================
+        // INITIALIZATION
+        // =====================================================================
+        
+        function init() {
+            populateVariables();
+            populateStates();
+            populateYears();
+            updateCounts();
+        }
+        
+        function populateVariables() {
+            const grid = document.getElementById('variablesGrid');
+            grid.innerHTML = '';
+            
+            for (const [id, name] of Object.entries(CONFIG.variables)) {
+                const div = document.createElement('div');
+                div.className = 'checkbox-item';
+                div.innerHTML = `
+                    <input type="checkbox" id="var_${id}" value="${id}" 
+                           onchange="updateCounts()" 
+                           ${CONFIG.keyVariables.includes(parseInt(id)) ? 'checked' : ''}>
+                    <label for="var_${id}" title="${name}">${id}. ${name.substring(0, 20)}${name.length > 20 ? '...' : ''}</label>
+                `;
+                grid.appendChild(div);
+            }
+        }
+        
+        function populateStates() {
+            const grid = document.getElementById('statesGrid');
+            grid.innerHTML = '';
+            
+            CONFIG.states.forEach((state, idx) => {
+                const div = document.createElement('div');
+                div.className = 'checkbox-item';
+                const isMajor = CONFIG.majorStates.includes(state);
+                div.innerHTML = `
+                    <input type="checkbox" id="state_${idx}" value="${state}" 
+                           onchange="updateCounts()" ${isMajor ? 'checked' : ''}>
+                    <label for="state_${idx}" title="${state}">${state.substring(0, 18)}${state.length > 18 ? '...' : ''}</label>
+                `;
+                grid.appendChild(div);
+            });
+        }
+        
+        function populateYears() {
+            const startSelect = document.getElementById('startYear');
+            const endSelect = document.getElementById('endYear');
+            
+            CONFIG.years.forEach((year, idx) => {
+                startSelect.innerHTML += `<option value="${year}" ${idx === 0 ? 'selected' : ''}>${year}</option>`;
+                endSelect.innerHTML += `<option value="${year}" ${idx === CONFIG.years.length - 1 ? 'selected' : ''}>${year}</option>`;
+            });
+        }
+        
+        // =====================================================================
+        // SELECTION HELPERS
+        // =====================================================================
+        
+        function selectAll(type) {
+            const grid = document.getElementById(type === 'variables' ? 'variablesGrid' : 'statesGrid');
+            grid.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+            updateCounts();
+        }
+        
+        function selectNone(type) {
+            const grid = document.getElementById(type === 'variables' ? 'variablesGrid' : 'statesGrid');
+            grid.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            updateCounts();
+        }
+        
+        function selectCategory(category) {
+            if (category === 'key') {
+                selectNone('variables');
+                CONFIG.keyVariables.forEach(id => {
+                    const cb = document.getElementById(`var_${id}`);
+                    if (cb) cb.checked = true;
+                });
+            } else if (category === 'major') {
+                selectNone('states');
+                CONFIG.majorStates.forEach(state => {
+                    const idx = CONFIG.states.indexOf(state);
+                    if (idx >= 0) {
+                        const cb = document.getElementById(`state_${idx}`);
+                        if (cb) cb.checked = true;
+                    }
+                });
+            }
+            updateCounts();
+        }
+        
+        function updateCounts() {
+            const varCount = document.querySelectorAll('#variablesGrid input:checked').length;
+            const stateCount = document.querySelectorAll('#statesGrid input:checked').length;
+            
+            document.getElementById('varCount').textContent = `${varCount} selected`;
+            document.getElementById('stateCount').textContent = `${stateCount} selected`;
+        }
+        
+        function getSelectedVariables() {
+            return Array.from(document.querySelectorAll('#variablesGrid input:checked'))
+                .map(cb => parseInt(cb.value));
+        }
+        
+        function getSelectedStates() {
+            return Array.from(document.querySelectorAll('#statesGrid input:checked'))
+                .map(cb => cb.value);
+        }
+        
+        function getYearRange() {
+            const start = document.getElementById('startYear').value;
+            const end = document.getElementById('endYear').value;
+            const startIdx = CONFIG.years.indexOf(start);
+            const endIdx = CONFIG.years.indexOf(end);
+            return CONFIG.years.slice(startIdx, endIdx + 1);
+        }
+        
+        // =====================================================================
+        // DATA LOADING & PROCESSING
+        // =====================================================================
+        
+        async function loadData() {
+            const btn = document.getElementById('loadBtn');
+            const status = document.getElementById('statusBar');
+            
+            const selectedVars = getSelectedVariables();
+            const selectedStates = getSelectedStates();
+            const yearRange = getYearRange();
+            
+            if (selectedVars.length === 0) {
+                alert('Please select at least one variable');
+                return;
+            }
+            if (selectedStates.length === 0) {
+                alert('Please select at least one state');
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.textContent = '⏳ Loading...';
+            status.textContent = 'Loading data files...';
+            
+            try {
+                // Load data from JSON file
+                const response = await fetch(CONFIG.dataPath + 'ASI_NIC14_data.json');
+                if (!response.ok) {
+                    throw new Error('Data file not found. Please run the data preparation script first.');
+                }
+                
+                const allData = await response.json();
+                status.textContent = 'Filtering data...';
+                
+                // Filter data in browser (client-side processing)
+                filteredData = filterData(allData, selectedVars, selectedStates, yearRange);
+                
+                status.textContent = `Loaded ${filteredData.length.toLocaleString()} rows`;
+                
+                // Display
+                displayData(filteredData);
+                
+                // Enable export buttons
+                document.getElementById('exportCsvBtn').disabled = false;
+                document.getElementById('exportExcelBtn').disabled = false;
+                
+            } catch (error) {
+                status.textContent = `Error: ${error.message}`;
+                console.error(error);
+                
+                // Show demo with sample data if file not found
+                if (error.message.includes('not found')) {
+                    loadDemoData();
+                }
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '📥 Load Data';
+            }
+        }
+        
+        function filterData(data, variables, states, years) {
+            return data.filter(row => 
+                variables.includes(row.Variable_ID) &&
+                states.includes(row.State) &&
+                years.includes(row.Year)
+            );
+        }
+        
+        function loadDemoData() {
+            // Generate demo data for testing
+            const status = document.getElementById('statusBar');
+            status.textContent = 'Loading demo data (actual data file not found)...';
+            
+            const selectedVars = getSelectedVariables();
+            const selectedStates = getSelectedStates();
+            const yearRange = getYearRange();
+            
+            const demoData = [];
+            
+            yearRange.forEach(year => {
+                selectedStates.forEach(state => {
+                    selectedVars.forEach(varId => {
+                        demoData.push({
+                            Year: year,
+                            State: state,
+                            Variable_ID: varId,
+                            Variable: CONFIG.variables[varId],
+                            Value: Math.random() > 0.3 ? Math.floor(Math.random() * 10000) : null
+                        });
+                    });
+                });
+            });
+            
+            filteredData = demoData;
+            displayData(filteredData);
+            
+            document.getElementById('exportCsvBtn').disabled = false;
+            document.getElementById('exportExcelBtn').disabled = false;
+            
+            status.textContent = `Demo mode: ${filteredData.length.toLocaleString()} rows (generate real data with prepare_web_data.py)`;
+        }
+        
+        // =====================================================================
+        // DATA DISPLAY
+        // =====================================================================
+        
+        function displayData(data) {
+            const container = document.getElementById('tableContainer');
+            const format = document.querySelector('input[name="format"]:checked').value;
+            
+            let displayData = data;
+            
+            if (format === 'wide') {
+                displayData = convertToWide(data);
+            }
+            
+            // Update stats
+            document.getElementById('rowCount').textContent = displayData.length.toLocaleString();
+            document.getElementById('colCount').textContent = displayData.length > 0 ? Object.keys(displayData[0]).length : 0;
+            
+            // Limit display for performance
+            const maxDisplay = 500;
+            const truncated = displayData.length > maxDisplay;
+            const showData = displayData.slice(0, maxDisplay);
+            
+            if (showData.length === 0) {
+                container.innerHTML = '<div class="loading">No data matches your selection</div>';
+                return;
+            }
+            
+            // Build table
+            const columns = Object.keys(showData[0]);
+            
+            let html = '<table><thead><tr>';
+            columns.forEach(col => {
+                html += `<th>${col}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            
+            showData.forEach(row => {
+                html += '<tr>';
+                columns.forEach(col => {
+                    const val = row[col];
+                    html += `<td>${val !== null && val !== undefined ? val : '-'}</td>`;
+                });
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table>';
+            
+            if (truncated) {
+                html += `<div style="padding: 10px; text-align: center; color: #888;">
+                    Showing first ${maxDisplay} of ${displayData.length.toLocaleString()} rows. Export for full data.
+                </div>`;
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        function convertToWide(longData) {
+            // Group by Year and Variable, with States as columns
+            const grouped = {};
+            
+            longData.forEach(row => {
+                const key = `${row.Year}|${row.Variable_ID}`;
+                if (!grouped[key]) {
+                    grouped[key] = {
+                        Year: row.Year,
+                        Variable_ID: row.Variable_ID,
+                        Variable: row.Variable
+                    };
+                }
+                grouped[key][row.State] = row.Value;
+            });
+            
+            return Object.values(grouped);
+        }
+        
+        function reformatData() {
+            if (filteredData) {
+                displayData(filteredData);
+            }
+        }
+        
+        // =====================================================================
+        // EXPORT FUNCTIONS
+        // =====================================================================
+        
+        function exportCSV() {
+            if (!filteredData || filteredData.length === 0) return;
+            
+            const format = document.querySelector('input[name="format"]:checked').value;
+            let data = format === 'wide' ? convertToWide(filteredData) : filteredData;
+            
+            const columns = Object.keys(data[0]);
+            
+            let csv = columns.join(',') + '\n';
+            
+            data.forEach(row => {
+                const values = columns.map(col => {
+                    const val = row[col];
+                    if (val === null || val === undefined) return '';
+                    if (typeof val === 'string' && (val.includes(',') || val.includes('"'))) {
+                        return `"${val.replace(/"/g, '""')}"`;
+                    }
+                    return val;
+                });
+                csv += values.join(',') + '\n';
+            });
+            
+            downloadFile(csv, 'ASI_Data_Export.csv', 'text/csv');
+        }
+        
+        function exportExcel() {
+            if (!filteredData || filteredData.length === 0) return;
+            
+            const format = document.querySelector('input[name="format"]:checked').value;
+            let data = format === 'wide' ? convertToWide(filteredData) : filteredData;
+            
+            // Use SheetJS
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'ASI Data');
+            
+            // Add metadata sheet
+            const meta = [
+                { Field: 'Export Date', Value: new Date().toISOString() },
+                { Field: 'Format', Value: format },
+                { Field: 'Total Rows', Value: data.length },
+                { Field: 'Variables', Value: getSelectedVariables().length },
+                { Field: 'States', Value: getSelectedStates().length },
+                { Field: 'Year Range', Value: `${getYearRange()[0]} to ${getYearRange().slice(-1)[0]}` }
+            ];
+            const wsMeta = XLSX.utils.json_to_sheet(meta);
+            XLSX.utils.book_append_sheet(wb, wsMeta, 'Metadata');
+            
+            XLSX.writeFile(wb, 'ASI_Data_Export.xlsx');
+        }
+        
+        function downloadFile(content, filename, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
